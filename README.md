@@ -1,5 +1,3 @@
-# spring-boot-code-dto
-
 # Tutorial implementar DTO con model mapper
 
 DTO es una abreviatura de **"Data Transfer Object"** en el contexto de programación y desarrollo de software. Un DTO no es un patrón de diseño formal, sino un concepto que se utiliza para transferir datos entre diferentes componentes de una aplicación. Su propósito principal es encapsular un conjunto de datos y enviarlos desde una capa de la aplicación a otra, lo que facilita la comunicación entre las capas.
