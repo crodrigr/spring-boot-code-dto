@@ -775,10 +775,96 @@ public class EstudianteController {
 }
 
 
-
 ```
 
 </details>
 
 
 
+# Validation 
+
+En Spring Boot, la validación es un aspecto esencial para asegurarse de que los datos que recibe o procesa tu aplicación cumplan con los criterios requeridos. Spring Boot proporciona soporte integrado para la validación utilizando la API de Validación de Java Bean (también conocida como JSR 380) en combinación con Hibernate Validator.
+
+Así es cómo puedes realizar la validación en una aplicación Spring Boot:
+
+1. **Agregar Dependencias**:
+
+   Asegúrate de tener las dependencias requeridas en la configuración de tu proyecto (normalmente en tu archivo `pom.xml` para Maven o `build.gradle` para Gradle):
+
+   Para Maven:
+
+   ```xml
+   <dependencies>
+       <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter</artifactId>
+       </dependency>
+       <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-validation</artifactId>
+       </dependency>
+   </dependencies>
+   ```
+
+2. **Crear un Modelo**:
+
+   Define el modelo de datos que deseas validar. Anota los campos de esta clase de modelo con anotaciones de validación como `@NotEmpty`, `@NotNull` u otras según tus requisitos.
+
+   ```java
+   public class MiModelo {
+       @NotEmpty
+       private String nombre;
+
+       @Email
+       private String correo;
+
+       // Getters y setters
+   }
+   ```
+
+3. **Utilizar la Validación en un Controlador**:
+
+   En tu controlador, puedes aplicar la validación al modelo anotándolo con `@Valid`. También, incluye un parámetro `BindingResult` para capturar los errores de validación.
+
+   ```java
+   import org.springframework.stereotype.Controller;
+   import org.springframework.validation.BindingResult;
+   import org.springframework.web.bind.annotation.PostMapping;
+   import org.springframework.web.bind.annotation.RequestMapping;
+   import org.springframework.web.bind.annotation.ResponseBody;
+   import javax.validation.Valid;
+
+   @Controller
+   public class MiControlador {
+
+       @PostMapping("/enviar")
+       @ResponseBody
+       public String enviarFormulario(@Valid MiModelo miModelo, BindingResult bindingResult) {
+           if (bindingResult.hasErrors()) {
+               // Manejar los errores de validación
+               return "La validación ha fallado";
+           }
+
+           // Si la validación es exitosa, procesa los datos del formulario
+           return "Formulario enviado con éxito";
+       }
+   }
+   ```
+
+4. **Manejar Errores de Validación**:
+
+   Si la validación falla, puedes manejar los errores de acuerdo a lo que necesites en tu controlador. El objeto `BindingResult` contendrá los errores de validación.
+
+5. **Configuración (Opcional)**:
+
+   Asegúrate de tener una configuración de validación adecuada en tu archivo `application.properties` o `application.yml` si necesitas personalizar la configuración de validación.
+
+Estas son algunas de las anotaciones de validación comunes que puedes utilizar:
+
+- `@NotEmpty`: Asegura que el elemento anotado no sea nulo y no sea una cadena vacía.
+- `@NotNull`: Asegura que el elemento anotado no sea nulo.
+- `@Email`: Asegura que el elemento anotado sea una dirección de correo electrónico válida.
+- `@Size`: Especifica las restricciones de tamaño para el elemento anotado (por ejemplo, longitud mínima y máxima).
+- `@Pattern`: Compara el elemento anotado con un patrón de expresión regular.
+
+El marco de validación de Spring Boot validará automáticamente los datos de entrada con las restricciones especificadas y llenará el `BindingResult` con los errores, convirtiéndolo en una herramienta poderosa para garantizar la integridad de los datos en tu aplicación.
